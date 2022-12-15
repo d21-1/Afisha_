@@ -16,14 +16,24 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from movie_app import views
+from . import yasg
+
+LIST_CREATE = {
+    'get': 'list', 'post': 'create'
+}
+ITEM_UPDATE_DELETE = {
+    'get': 'retrieve', 'put': 'update', 'delete': 'destroy'
+}
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/directors/', views.directors_view),
-    path('api/v1/directors/<int:id>/', views.director_view),
-    path('api/v1/movies/', views.movies_view),
-    path('api/v1/movies/<int:id>/', views.movie_view),
-    path('api/v1/reviews/', views.reviews_view),
-    path('api/v1/reviews/<int:id>/', views.review_view),
-    path('api/v1/movies/reviews/', views.movies_reviews_view),
+    path('api/v1/directors/', views.DirectorModelViewSet.as_view(LIST_CREATE)),
+    path('api/v1/directors/<int:id>/', views.DirectorModelViewSet.as_view(ITEM_UPDATE_DELETE)),
+    path('api/v1/movies/', views.MovieModelViewSet.as_view(LIST_CREATE)),
+    path('api/v1/movies/<int:id>/', views.MovieModelViewSet.as_view(ITEM_UPDATE_DELETE)),
+    path('api/v1/reviews/', views.ReviewModelViewSet.as_view(LIST_CREATE)),
+    path('api/v1/reviews/<int:id>/', views.ReviewModelViewSet.as_view(ITEM_UPDATE_DELETE)),
+    path('api/v1/movies/reviews/', views.MovieModelViewSet.as_view(LIST_CREATE)),
     path('api/v1/users/', include('users.urls'))
 ]
+
+urlpatterns += yasg.urlpatterns
